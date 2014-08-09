@@ -1,0 +1,32 @@
+
+T2944 011:829 SEGGER J-Link V4.78j Log File (0006ms, 0353ms total)
+T2944 011:829 DLL Compiled: Nov 22 2013 20:08:33 (0006ms, 0353ms total)
+T2944 011:829 Logging started @ 2014-08-09 10:16 (0006ms, 0353ms total)
+T2944 011:835 JLINK_SetWarnOutHandler(...) (0000ms, 0353ms total)
+T2944 011:835 JLINK_OpenEx(...)
+Firmware: J-Link ARM V8 compiled Nov 25 2013 19:20:08
+Hardware: V8.00
+S/N: 68000531
+Feature(s): RDI, FlashDL, FlashBP, JFlash, GDBServer  returns O.K. (0272ms, 0625ms total)
+T2944 012:107 JLINK_SetErrorOutHandler(...) (0000ms, 0625ms total)
+T2944 012:108 JLINK_ExecCommand("ProjectFile = "G:\rt-thread\rt-thread\bsp\stm32f107job\JLinkSettings.ini"", ...)  returns 0x00 (0025ms, 0650ms total)
+T2944 012:133 JLINK_ExecCommand("Device = STM32F107VC", ...)Device "STM32F107VC" selected (256 KB flash, 64 KB RAM).  returns 0x00 (0001ms, 0651ms total)
+T2944 012:134 JLINK_ExecCommand("DisableConnectionTimeout", ...)  returns 0x01 (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetDLLVersion()  returns 47810 (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetFirmwareString(...) (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetDLLVersion()  returns 47810 (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetCompileDateTime() (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetFirmwareString(...) (0000ms, 0651ms total)
+T2944 012:134 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0651ms total)
+T2944 012:134 JLINK_TIF_Select(JLINKARM_TIF_JTAG)  returns 0x00 (0000ms, 0651ms total)
+T2944 012:134 JLINK_SetSpeed(2000) (0001ms, 0652ms total)
+T2944 012:135 JLINK_SetResetType(JLINKARM_RESET_TYPE_NORMAL)  returns JLINKARM_RESET_TYPE_NORMAL (0000ms, 0652ms total)
+T2944 012:135 JLINK_Reset()
+  ***** Error: Supply voltage too low (1 Volt is required, Measured: 0.0 Volt).
+Please check target power.STM32F1xxx: Can not attach to CPU. Trying connect under reset.RESET (pin 15) high, but should be low. Please check target hardware.JLINK_GetIdData(...) (0000ms, 0957ms total)
+T2944 012:440 JLINK_GetIdData(...) (0001ms, 0958ms total)
+T2944 012:448 JLINK_GetFirmwareString(...) (0000ms, 0958ms total)
+T2944 091:805 JLINK_Close() (0001ms, 0959ms total)
+T2944 091:805  (0001ms, 0959ms total)
+T2944 091:805 Closed (0001ms, 0959ms total)
