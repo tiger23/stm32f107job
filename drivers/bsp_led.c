@@ -1,5 +1,5 @@
 /*
- * File      : led.c
+ * File      : bsp_led.c
  * This file is part of RT-Thread RTOS
  * COPYRIGHT (C) 2009, RT-Thread Development Team
  *
@@ -25,22 +25,11 @@
 #define led2_pin                    (GPIO_Pin_6)
 
 #else
+#define led_rcc                    RCC_APB2Periph_GPIOB
+#define led_gpio                   GPIOB
+#define led0_pin                    (GPIO_Pin_0)
+#define led1_pin                    (GPIO_Pin_1)
 
-#define led1_rcc                    RCC_APB2Periph_GPIOF
-#define led1_gpio                   GPIOF
-#define led1_pin                    (GPIO_Pin_6)
-
-#define led2_rcc                    RCC_APB2Periph_GPIOF
-#define led2_gpio                   GPIOF
-#define led2_pin                    (GPIO_Pin_7)
-
-#define led3_rcc                    RCC_APB2Periph_GPIOF
-#define led3_gpio                   GPIOF
-#define led3_pin                    (GPIO_Pin_8)
-
-#define led4_rcc                    RCC_APB2Periph_GPIOF
-#define led4_gpio                   GPIOF
-#define led4_pin                    (GPIO_Pin_9)
 
 #endif // led define #ifdef STM32_SIMULATOR
 
@@ -48,52 +37,40 @@ void rt_hw_led_init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOF,ENABLE);
+    RCC_APB2PeriphClockCmd(led_rcc,ENABLE);
 
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9;
-    GPIO_Init(GPIOF,&GPIO_InitStructure);
+	  GPIO_InitStructure.GPIO_Pin = led0_pin | led1_pin;
+    GPIO_Init(led_gpio,&GPIO_InitStructure);
 
-    GPIO_SetBits(GPIOF,GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
+    GPIO_SetBits(led_gpio,led0_pin | led1_pin );
 }
 
-void rt_hw_led_off(rt_uint32_t n)
+void rt_hw_led_off(rt_uint8_t n)
 {
     switch (n)
     {
+    case 0:
+        GPIO_SetBits(led_gpio, led0_pin);
+        break;
     case 1:
-        GPIO_SetBits(led1_gpio, led1_pin);
+        GPIO_SetBits(led_gpio, led1_pin);
         break;
-    case 2:
-        GPIO_SetBits(led2_gpio, led2_pin);
-        break;
-		case 3:
-        GPIO_SetBits(led3_gpio, led3_pin);
-        break;
-    case 4:
-        GPIO_SetBits(led4_gpio, led4_pin);
-        break;
-    default:
+	default:
         break;
     }
 }
 
-void rt_hw_led_on(rt_uint32_t n)
+void rt_hw_led_on(rt_uint8_t n)
 {
     switch (n)
     {
+    case 0:
+        GPIO_ResetBits(led_gpio, led0_pin);
+        break;
     case 1:
-        GPIO_ResetBits(led1_gpio, led1_pin);
-        break;
-    case 2:
-        GPIO_ResetBits(led2_gpio, led2_pin);
-        break;
-		case 3:
-        GPIO_ResetBits(led3_gpio, led3_pin);
-        break;
-    case 4:
-        GPIO_ResetBits(led4_gpio, led4_pin);
+        GPIO_ResetBits(led_gpio, led1_pin);
         break;
     default:
         break;
@@ -103,7 +80,7 @@ void rt_hw_led_on(rt_uint32_t n)
 #ifdef RT_USING_FINSH
 #include <finsh.h>
 static rt_uint8_t led_inited = 0;
-void led(rt_uint32_t led, rt_uint32_t value)
+void led(rt_uint8_t led, rt_uint8_t value)
 {
     /* init led configuration if it's not inited. */
     if (!led_inited)
@@ -127,6 +104,6 @@ void led(rt_uint32_t led, rt_uint32_t value)
         }
 
 }
-FINSH_FUNCTION_EXPORT(led, set led[1 - 4] on[1] or off[0].)
+FINSH_FUNCTION_EXPORT(led, set led[0 - 1] on[1] or off[0].)
 #endif
 

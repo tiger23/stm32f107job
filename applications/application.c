@@ -28,6 +28,110 @@
 #include <components.h>
 #endif /* RT_USING_COMPONENTS_INIT */
 
+ALIGN(RT_ALIGN_SIZE)
+static rt_uint8_t led_stack[ 512 ];
+static struct rt_thread led_thread;
+static void led_thread_entry(void* parameter)
+{
+    rt_uint8_t led0=0;
+    rt_uint8_t led1=1;
+    
+    rt_hw_led_init();
+
+    while (1)
+    {
+        /* led1 on */
+#ifndef RT_USING_FINSH
+        rt_kprintf("led on, count : %d\r\n",count);
+#endif
+        //count++;
+        rt_hw_led_on(led0);
+        rt_thread_delay( RT_TICK_PER_SECOND/2 ); /* sleep 0.5 second and switch to other thread */
+
+        /* led1 off */
+#ifndef RT_USING_FINSH
+        rt_kprintf("led off\r\n");
+#endif
+        rt_hw_led_off(led0);
+        rt_thread_delay( RT_TICK_PER_SECOND/2 );
+
+        
+
+    }
+}
+
+rt_uint8_t spiFlashWrBuf[10] = {0,1, 2, 3, 4, 5, 6, 7, 8, 9};
+rt_uint8_t spiFlashRdBuf[10];
+ALIGN(RT_ALIGN_SIZE)
+static rt_uint8_t spiFlashWrRd_stack[ 512 ];
+static struct rt_thread spiFlashWrRd_thread;
+static void spiFlashWrRd_thread_entry(void* parameter)
+{
+    //rt_hw_spiflash_init();
+
+    while (1)
+    {
+        
+        //if(spiFLASH_WR(1, spiFlashWrBuf, 10))
+        //rt_kprintf("SPI Flash wrhite succeess.\r\n");
+        rt_thread_delay( RT_TICK_PER_SECOND/2 ); /* sleep 0.5 second and switch to other thread */
+
+        //if(spiFLASH_RD(1, spiFlashRdBuf, 10))
+        //rt_kprintf("SPI Flash read data is %d %d %d %d %d %d %d %d %d %d\r\n",spiFlashRdBuf[10],spiFlashRdBuf[1],spiFlashRdBuf[2],spiFlashRdBuf[3],spiFlashRdBuf[4],spiFlashRdBuf[5],spiFlashRdBuf[6],spiFlashRdBuf[7],spiFlashRdBuf[8],spiFlashRdBuf[9]);
+      
+    }
+}
+
+//====================操作系统各线程优先级==================================
+#define thread_RS485Poll_Prio         10
+
+ALIGN(RT_ALIGN_SIZE)
+//====================操作系统各线程堆栈====================================
+static rt_uint8_t thread_RS485Poll_stack[512];
+
+struct rt_thread thread_RS485Poll;
+//************************ RS485轮训线程***************************
+//函数定义: void thread_entry_RS485Poll(void* parameter)
+//入口参数：无
+//出口参数：无
+//备    注：Editor：Astiger   2014-08-15    
+//******************************************************************
+void thread_entry_RS485Poll(void* parameter)
+{
+    rt_hw_RS485_init();
+    
+    while (1)
+    {
+        RS485Poll();
+        rt_thread_delay(DELAY_RS485_POLL);
+    }
+}
+
+//====================操作系统各线程优先级==================================
+#define thread_CANPoll_Prio         11
+
+ALIGN(RT_ALIGN_SIZE)
+//====================操作系统各线程堆栈====================================
+static rt_uint8_t thread_CANPoll_stack[512];
+
+struct rt_thread thread_CANPoll;
+//************************ CAN总线轮训线程***************************
+//函数定义: void thread_entry_CANPoll(void* parameter)
+//入口参数：无
+//出口参数：无
+//备    注：Editor：Astiger   2014-08-15 
+//******************************************************************
+void thread_entry_CANPoll(void* parameter)
+{
+    rt_hw_CAN_init(void);
+    //eMBEnable();
+    while (1)
+    {
+        CANPoll();
+        rt_thread_delay(DELAY_CAN_POLL);
+    }
+}
+
 void rt_init_thread_entry(void* parameter)
 {
     {
@@ -59,6 +163,23 @@ void rt_init_thread_entry(void* parameter)
 int rt_application_init(void)
 {
     rt_thread_t init_thread;
+
+    rt_err_t result;
+
+    /* init led thread */
+    result = rt_thread_init(&led_thread,
+                            "led",
+                            led_thread_entry,
+                            RT_NULL,
+                            (rt_uint8_t*)&led_stack[0],
+                            sizeof(led_stack),
+                            21,
+                            5);
+    if (result == RT_EOK)
+    {
+        rt_thread_startup(&led_thread);
+    }
+
 
 #if (RT_THREAD_PRIORITY_MAX == 32)
     init_thread = rt_thread_create("init",
