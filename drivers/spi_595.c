@@ -36,7 +36,7 @@ static rt_err_t M74HC595_control(rt_device_t dev, rt_uint8_t cmd, void *args)
     return RT_EOK;
 }
 
-static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void *buffer, rt_size_t size)
+static rt_size_t spi_read_165( void *buffer, rt_size_t size)
 {
     uint32_t index, nr;
     uint8_t *read_buffer = buffer;
@@ -45,7 +45,6 @@ static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void *buffer, rt_si
 
     for (index = 0; index < nr; index++)
     {
-        uint32_t  page = pos;
         uint8_t send_buffer[8];
         uint32_t i;
 
@@ -55,14 +54,14 @@ static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void *buffer, rt_si
         }
 
         rt_spi_send_then_recv(spi_m74hc595.rt_spi_device, send_buffer, 8, read_buffer, 256);
-        read_buffer += 256;
-        page++;
+        //read_buffer += 256;
+        
     }
 
     return size;
 }
 
-static rt_size_t spi_write_595(rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t size)
+static rt_size_t spi_write_595( const void *buffer, rt_size_t size)
 {
     rt_uint32_t index, nr;
     const uint8_t *write_buffer = buffer;
@@ -71,19 +70,18 @@ static rt_size_t spi_write_595(rt_device_t dev, rt_off_t pos, const void *buffer
 
     for (index = 0; index < nr; index++)
     {
-        uint32_t  page = pos;
+        
         uint8_t send_buffer[4];
 
         send_buffer[0] = 1;
-        send_buffer[1] = (uint8_t)(page >> 7);
-        send_buffer[2] = (uint8_t)(page << 1);
+        send_buffer[1] = 2;
+        send_buffer[2] = 3;
         send_buffer[3] = 0;
 
         rt_spi_send_then_send(spi_m74hc595.rt_spi_device, send_buffer, 4, write_buffer, 256);
 
-        write_buffer += 256;
-        page++;
-
+        //write_buffer += 256;
+        
         //wait_busy();
     }
 
@@ -134,9 +132,9 @@ rt_err_t m74hc595_init(const char *m74hc595_device_name, const char *spi_device_
 
 void rt_hw_spi_m74hc595_init(void)
 {
-
+m74hc595_init("m74hc595", "SPI1");
 }
 void spi_m74hc595_Poll(void)
 {
-
+spi_m74hc595.m74hc595_device.write();
 }

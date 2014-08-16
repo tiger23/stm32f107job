@@ -67,7 +67,7 @@ static void led_thread_entry(void *parameter)
 rt_uint8_t spi_m74hc595_WrBuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 rt_uint8_t spi_m74hc595_RdBuf[10];
 ALIGN(RT_ALIGN_SIZE)
-static rt_uint8_t spi_m74hc595_WrRd_stack[ 512 ];
+static rt_uint8_t spi_m74hc595_WrRd_thread_stack[ 512 ];
 static struct rt_thread spi_m74hc595_WrRd_thread;
 static void spi_m74hc595_WrRd_thread_entry(void *parameter)
 {
@@ -183,7 +183,45 @@ int rt_application_init(void)
         rt_thread_startup(&led_thread);
     }
 
-
+/* init led thread */
+    result = rt_thread_init(&spi_m74hc595_WrRd_thread,
+                            "spi",
+                            spi_m74hc595_WrRd_thread_entry,
+                            RT_NULL,
+                            (rt_uint8_t *)&spi_m74hc595_WrRd_thread_stack[0],
+                            sizeof(spi_m74hc595_WrRd_thread_stack),
+                            22,
+                            5);
+    if (result == RT_EOK)
+    {
+        rt_thread_startup(&spi_m74hc595_WrRd_thread);
+    }
+	/* init led thread */
+    result = rt_thread_init(&thread_RS485Poll,
+                            "485",
+                            thread_entry_RS485Poll,
+                            RT_NULL,
+                            (rt_uint8_t *)&thread_RS485Poll_stack[0],
+                            sizeof(thread_RS485Poll_stack),
+                            23,
+                            5);
+    if (result == RT_EOK)
+    {
+        rt_thread_startup(&thread_RS485Poll);
+    }
+	/* thread_entry_CANPoll */
+    result = rt_thread_init(&thread_CANPoll,
+                            "CAN",
+                            thread_entry_CANPoll,
+                            RT_NULL,
+                            (rt_uint8_t *)&thread_CANPoll_stack[0],
+                            sizeof(thread_CANPoll_stack),
+                            24,
+                            5);
+    if (result == RT_EOK)
+    {
+        rt_thread_startup(&thread_CANPoll);
+    }
 #if (RT_THREAD_PRIORITY_MAX == 32)
     init_thread = rt_thread_create("init",
                                    rt_init_thread_entry, RT_NULL,
