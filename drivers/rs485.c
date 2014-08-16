@@ -144,7 +144,3 @@ void RS485Poll(void)
 {
 
 }
-void USART2_IRQHandler(void)
-{
-
-}
