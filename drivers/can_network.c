@@ -224,7 +224,7 @@ void CAN_Config(void)
  */
 void CAN_SetMsg(void)
 {
-    g_CanTxMessage.StdId=0x1314;                    //使用的标准ID
+    g_CanTxMessage.StdId = 0x1314;                  //使用的标准ID
     g_CanTxMessage.ExtId = 0x1314;                  //使用的扩展ID
     g_CanTxMessage.IDE = CAN_ID_STD;                //标准模式
     g_CanTxMessage.RTR = CAN_RTR_DATA;              //发送的是数据
@@ -244,7 +244,7 @@ u8 CAN_Send_Msg(u8 *msg, u8 len)
 {
     u8 mbox;
     u16 i = 0;
-    
+
     g_CanTxMessage.StdId = 0x1314;                  // 标准标识符为0x1314
     g_CanTxMessage.ExtId = 0x1314;              // 设置扩展标示符（29位）
     g_CanTxMessage.IDE = CAN_ID_STD;        // 使用标准标识符
@@ -279,7 +279,11 @@ u8 CAN_Receive_Msg(u8 *buf)
 
 void rt_hw_CAN_init(void)
 {
-CAN_Config();
+    CAN_Config();
+}
+void CANPoll(void)
+{
+    
 }
 
 /******************************************************************************/
@@ -296,18 +300,18 @@ CAN_Config();
   */
 void CAN1_RX0_IRQHandler(void)
 {
-  CAN_Receive(CAN1, CAN_FIFO0, &g_CanRxMessage);
+    CAN_Receive(CAN1, CAN_FIFO0, &g_CanRxMessage);
 
-  if ((g_CanRxMessage.StdId == 0x321)&&(g_CanRxMessage.IDE == CAN_ID_STD)&&(g_CanRxMessage.DLC == 1)&&(g_CanRxMessage.Data[0] == 0xAA))
-  {
-    /* Turn On LED3 */
-    //LED_Display(0x03); /* OK */
-  }
-  else
-  {
-    /* Turn Off LED3 */
-    //LED_Display(0x05); /* Error */
-  }
+    if ((g_CanRxMessage.StdId == 0x321) && (g_CanRxMessage.IDE == CAN_ID_STD) && (g_CanRxMessage.DLC == 1) && (g_CanRxMessage.Data[0] == 0xAA))
+    {
+        /* Turn On LED3 */
+        //LED_Display(0x03); /* OK */
+    }
+    else
+    {
+        /* Turn Off LED3 */
+        //LED_Display(0x05); /* Error */
+    }
 }
 
 /**
@@ -318,18 +322,18 @@ void CAN1_RX0_IRQHandler(void)
 
 void CAN2_RX0_IRQHandler(void)
 {
-  CAN_Receive(CAN2, CAN_FIFO0, &g_CanRxMessage);
+    CAN_Receive(CAN2, CAN_FIFO0, &g_CanRxMessage);
 
-  if ((g_CanRxMessage.StdId == 0x321)&&(g_CanRxMessage.IDE == CAN_ID_STD)&&(g_CanRxMessage.DLC == 1)&&(g_CanRxMessage.Data[0] == 0x55))
-  {
-    /* Turn On LED4 */
-    //LED_Display(0x04); /* OK */
-  }
-  else
-  {
-    /* Turn Off LED4 */
-    //LED_Display(0x06); /* Error */
-  }
+    if ((g_CanRxMessage.StdId == 0x321) && (g_CanRxMessage.IDE == CAN_ID_STD) && (g_CanRxMessage.DLC == 1) && (g_CanRxMessage.Data[0] == 0x55))
+    {
+        /* Turn On LED4 */
+        //LED_Display(0x04); /* OK */
+    }
+    else
+    {
+        /* Turn Off LED4 */
+        //LED_Display(0x06); /* Error */
+    }
 }
 
 /**************************END OF FILE************************************/

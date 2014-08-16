@@ -10,6 +10,12 @@
 extern u8 RS485_RX_BUF[64]; 		//接收缓冲,最大64个字节
 extern u8 RS485_RX_CNT;   			//接收到的数据长度
 
+struct serial_rs485
+{
+    struct rt_device                rs485_device;
+    struct rt_serial_device *       rt_seria_device;
+};
+
 //模式控制
 #define PA1_RS485_RX_EN		PGout(9)	//485模式控制.0,接收;1,发送.
 #define PB8_RS485_RX_EN		PGout(9)	//485模式控制.0,接收;1,发送.

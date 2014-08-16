@@ -9,15 +9,15 @@ static struct rt_spi_ops stm32_spi_ops =
     xfer
 };
 
-#ifdef USING_SPI1
+#ifdef RT_USING_SPI1
 static struct stm32_spi_bus stm32_spi_bus_1;
 #endif /* #ifdef USING_SPI1 */
 
-#ifdef USING_SPI2
+#ifdef RT_USING_SPI2
 static struct stm32_spi_bus stm32_spi_bus_2;
 #endif /* #ifdef USING_SPI2 */
 
-#ifdef USING_SPI3
+#ifdef RT_USING_SPI3
 static struct stm32_spi_bus stm32_spi_bus_3;
 #endif /* #ifdef USING_SPI3 */
 

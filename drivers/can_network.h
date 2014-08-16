@@ -17,6 +17,8 @@
 #ifndef _CAN_NETWORK_H
 #define _CAN_NETWORK_H
 
+#define DELAY_CAN_POLL     4
+
 /* 供外部调用的函数声明 */
 void CAN_Config(void);
 void CAN_SetMsg(void);

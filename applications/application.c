@@ -31,54 +31,53 @@
 ALIGN(RT_ALIGN_SIZE)
 static rt_uint8_t led_stack[ 512 ];
 static struct rt_thread led_thread;
-static void led_thread_entry(void* parameter)
+static void led_thread_entry(void *parameter)
 {
-    rt_uint8_t led0=0;
-    rt_uint8_t led1=1;
-    
+    rt_uint8_t led0 = 0;
+    rt_uint8_t led1 = 1;
+
     rt_hw_led_init();
 
     while (1)
     {
         /* led1 on */
 #ifndef RT_USING_FINSH
-        rt_kprintf("led on, count : %d\r\n",count);
+        rt_kprintf("led on, count : %d\r\n", count);
 #endif
         //count++;
         rt_hw_led_on(led0);
-        rt_thread_delay( RT_TICK_PER_SECOND/2 ); /* sleep 0.5 second and switch to other thread */
+        rt_thread_delay(RT_TICK_PER_SECOND / 2); /* sleep 0.5 second and switch to other thread */
 
         /* led1 off */
 #ifndef RT_USING_FINSH
         rt_kprintf("led off\r\n");
 #endif
         rt_hw_led_off(led0);
-        rt_thread_delay( RT_TICK_PER_SECOND/2 );
+        rt_thread_delay(RT_TICK_PER_SECOND / 2);
 
-        
+
 
     }
 }
 
-rt_uint8_t spiFlashWrBuf[10] = {0,1, 2, 3, 4, 5, 6, 7, 8, 9};
-rt_uint8_t spiFlashRdBuf[10];
+rt_uint8_t spi_m74hc595_WrBuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+rt_uint8_t spi_m74hc595_RdBuf[10];
 ALIGN(RT_ALIGN_SIZE)
-static rt_uint8_t spiFlashWrRd_stack[ 512 ];
-static struct rt_thread spiFlashWrRd_thread;
-static void spiFlashWrRd_thread_entry(void* parameter)
+static rt_uint8_t spi_m74hc595_WrRd_stack[ 512 ];
+static struct rt_thread spi_m74hc595_WrRd_thread;
+static void spi_m74hc595_WrRd_thread_entry(void *parameter)
 {
-    //rt_hw_spiflash_init();
+    rt_hw_spi_m74hc595_init();
 
     while (1)
     {
-        
-        //if(spiFLASH_WR(1, spiFlashWrBuf, 10))
-        //rt_kprintf("SPI Flash wrhite succeess.\r\n");
-        rt_thread_delay( RT_TICK_PER_SECOND/2 ); /* sleep 0.5 second and switch to other thread */
 
-        //if(spiFLASH_RD(1, spiFlashRdBuf, 10))
-        //rt_kprintf("SPI Flash read data is %d %d %d %d %d %d %d %d %d %d\r\n",spiFlashRdBuf[10],spiFlashRdBuf[1],spiFlashRdBuf[2],spiFlashRdBuf[3],spiFlashRdBuf[4],spiFlashRdBuf[5],spiFlashRdBuf[6],spiFlashRdBuf[7],spiFlashRdBuf[8],spiFlashRdBuf[9]);
-      
+#ifndef RT_USING_FINSH
+        rt_kprintf("SPI wrhite succeess.\r\n");
+#endif
+        rt_thread_delay(RT_TICK_PER_SECOND / 2); /* sleep 0.5 second and switch to other thread */
+
+        spi_m74hc595_Poll();
     }
 }
 
@@ -94,12 +93,12 @@ struct rt_thread thread_RS485Poll;
 //函数定义: void thread_entry_RS485Poll(void* parameter)
 //入口参数：无
 //出口参数：无
-//备    注：Editor：Astiger   2014-08-15    
+//备    注：Editor：Astiger   2014-08-15
 //******************************************************************
-void thread_entry_RS485Poll(void* parameter)
+void thread_entry_RS485Poll(void *parameter)
 {
     rt_hw_RS485_init();
-    
+
     while (1)
     {
         RS485Poll();
@@ -119,9 +118,9 @@ struct rt_thread thread_CANPoll;
 //函数定义: void thread_entry_CANPoll(void* parameter)
 //入口参数：无
 //出口参数：无
-//备    注：Editor：Astiger   2014-08-15 
+//备    注：Editor：Astiger   2014-08-15
 //******************************************************************
-void thread_entry_CANPoll(void* parameter)
+void thread_entry_CANPoll(void *parameter)
 {
     rt_hw_CAN_init(void);
     //eMBEnable();
@@ -132,7 +131,7 @@ void thread_entry_CANPoll(void* parameter)
     }
 }
 
-void rt_init_thread_entry(void* parameter)
+void rt_init_thread_entry(void *parameter)
 {
     {
         extern void rt_platform_init(void);
@@ -171,7 +170,7 @@ int rt_application_init(void)
                             "led",
                             led_thread_entry,
                             RT_NULL,
-                            (rt_uint8_t*)&led_stack[0],
+                            (rt_uint8_t *)&led_stack[0],
                             sizeof(led_stack),
                             21,
                             5);
