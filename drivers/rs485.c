@@ -2,6 +2,8 @@
 #include <stm32f10x.h>
 #include <stm32f10x_usart.h>
 
+#include "rs485.h"
+
 static struct serial_rs485  rs485;
 
 void RS485_Init(void)
@@ -12,7 +14,7 @@ void RS485_Init(void)
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure.GPIO_Speed = GpIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
@@ -24,9 +26,9 @@ void RS485_Init(void)
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART2, ENABLE); //复位串口2
     RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART2, DISABLE); //停止复位
 
-    PA1_RS485_RX_EN = 0;        //默认为接收模式
-    PB8_RS485_RX_EN = 0;        //默认为接收模式
-    PC9_RS485_RX_EN = 0;        //默认为接收模式
+    PA1_RS485_RX_EN;        //默认为接收模式
+    PB8_RS485_RX_EN;        //默认为接收模式
+    PC9_RS485_RX_EN;        //默认为接收模式
 
 }
 
@@ -60,7 +62,7 @@ static rt_err_t RS485_control(rt_device_t dev, rt_uint8_t cmd, void *args)
 void RS485_Send_Data(u8 *buf, u8 len)
 {
     u8 t;
-    RS485_TX_EN = 1;        //设置为发送模式
+    PA1_RS485_TX_EN;        //设置为发送模式
     for (t = 0; t < len; t++) //循环发送数据
     {
         while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
@@ -69,7 +71,7 @@ void RS485_Send_Data(u8 *buf, u8 len)
 
     while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
     RS485_RX_CNT = 0;
-    RS485_TX_EN = 0;            //设置为接收模式
+    PA1_RS485_RX_EN;            //设置为接收模式
 }
 //RS485查询接收到的数据
 //buf:接收缓存首地址

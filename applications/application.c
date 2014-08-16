@@ -126,7 +126,7 @@ struct rt_thread thread_CANPoll;
 //******************************************************************
 void thread_entry_CANPoll(void *parameter)
 {
-    rt_hw_CAN_init(void);
+    rt_hw_CAN_init();
     //eMBEnable();
     while (1)
     {
