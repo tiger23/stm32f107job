@@ -16,6 +16,7 @@ struct serial_rs485
     struct rt_serial_device *       rt_seria_device;
 };
 
+#define DELAY_RS485_POLL    5
 //模式控制
 #define PA1_RS485_RX_EN		PGout(9)	//485模式控制.0,接收;1,发送.
 #define PB8_RS485_RX_EN		PGout(9)	//485模式控制.0,接收;1,发送.
@@ -26,7 +27,8 @@ struct serial_rs485
 void RS485_Init(u32 bound);
 void RS485_Send_Data(u8 *buf,u8 len);
 void RS485_Receive_Data(u8 *buf,u8 *len);
-
+void rt_hw_RS485_init(void);
+void RS485Poll(void);
 
 #endif	   
 

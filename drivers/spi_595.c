@@ -36,10 +36,10 @@ static rt_err_t M74HC595_control(rt_device_t dev, rt_uint8_t cmd, void *args)
     return RT_EOK;
 }
 
-static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void* buffer, rt_size_t size)
+static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void *buffer, rt_size_t size)
 {
     uint32_t index, nr;
-    uint8_t * read_buffer = buffer;
+    uint8_t *read_buffer = buffer;
 
     nr = size;
 
@@ -49,7 +49,7 @@ static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void* buffer, rt_si
         uint8_t send_buffer[8];
         uint32_t i;
 
-        for(i=0; i<sizeof(send_buffer); i++)
+        for (i = 0; i < sizeof(send_buffer); i++)
         {
             send_buffer[i] = 0;
         }
@@ -66,10 +66,10 @@ static rt_size_t spi_read_165(rt_device_t dev, rt_off_t pos, void* buffer, rt_si
     return size;
 }
 
-static rt_size_t spi_write_595(rt_device_t dev, rt_off_t pos, const void* buffer, rt_size_t size)
+static rt_size_t spi_write_595(rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t size)
 {
     rt_uint32_t index, nr;
-    const uint8_t * write_buffer = buffer;
+    const uint8_t *write_buffer = buffer;
 
     nr = size;
 
@@ -79,8 +79,8 @@ static rt_size_t spi_write_595(rt_device_t dev, rt_off_t pos, const void* buffer
         uint8_t send_buffer[4];
 
         send_buffer[0] = AT45DB_MM_PAGE_PROG_THRU_BUFFER1;
-        send_buffer[1] = (uint8_t) (page >> 7);
-        send_buffer[2] = (uint8_t) (page << 1);
+        send_buffer[1] = (uint8_t)(page >> 7);
+        send_buffer[2] = (uint8_t)(page << 1);
         send_buffer[3] = 0;
 
         rt_spi_send_then_send(spi_m74hc595.rt_spi_device, send_buffer, 4, write_buffer, 256);
@@ -134,4 +134,13 @@ rt_err_t m74hc595_init(const char *m74hc595_device_name, const char *spi_device_
                        RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_STANDALONE);
 
     return RT_EOK;
+}
+
+void rt_hw_spi_m74hc595_init(void)
+{
+
+}
+void spi_m74hc595_Poll(void)
+{
+
 }

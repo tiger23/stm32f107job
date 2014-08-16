@@ -20,6 +20,10 @@
 #include <board.h>
 #include <rtthread.h>
 
+#include "spi_595.h"
+#include "rs485.h"
+#include "can_network.h"
+
 #ifdef RT_USING_DFS
 #include <dfs_fs.h>
 #endif
