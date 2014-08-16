@@ -36,7 +36,8 @@ static rt_err_t M74HC595_control(rt_device_t dev, rt_uint8_t cmd, void *args)
     return RT_EOK;
 }
 
-static rt_size_t spi_read_165( void *buffer, rt_size_t size)
+static rt_size_t spi_read_165(rt_device_t dev,
+                          rt_off_t    pos, void *buffer, rt_size_t size)
 {
     uint32_t index, nr;
     uint8_t *read_buffer = buffer;
@@ -61,7 +62,8 @@ static rt_size_t spi_read_165( void *buffer, rt_size_t size)
     return size;
 }
 
-static rt_size_t spi_write_595( const void *buffer, rt_size_t size)
+static rt_size_t spi_write_595( rt_device_t dev,
+                          rt_off_t    pos,const void *buffer, rt_size_t size)
 {
     rt_uint32_t index, nr;
     const uint8_t *write_buffer = buffer;
@@ -136,5 +138,8 @@ m74hc595_init("m74hc595", "SPI1");
 }
 void spi_m74hc595_Poll(void)
 {
-spi_m74hc595.m74hc595_device.write();
+rt_size_t length=5;
+    static char rt_log_buf[5];
+rt_device_write(spi_m74hc595.m74hc595_device, 0, rt_log_buf, length);
+//spi_m74hc595.m74hc595_device.write();
 }
