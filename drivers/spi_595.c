@@ -140,6 +140,7 @@ void spi_m74hc595_Poll(void)
 {
 rt_size_t length=5;
     static char rt_log_buf[5];
-rt_device_write(spi_m74hc595.m74hc595_device, 0, rt_log_buf, length);
+rt_device_write(&spi_m74hc595.m74hc595_device, 0, rt_log_buf, length);
 //spi_m74hc595.m74hc595_device.write();
 }
+
