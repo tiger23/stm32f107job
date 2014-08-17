@@ -27,9 +27,9 @@ struct serial_rs485
 //如果想串口中断接收，请不要注释以下宏定义
 #define EN_USART2_RX 	1			//0,不接收;1,接收.
 
-void RS485_Init(void);
-void RS485_Send_Data(u8 *buf,u8 len);
-void RS485_Receive_Data(u8 *buf,u8 *len);
+void RS485_GPIO_Config(void);
+void RS485_Send_Data(const char *name, rt_size_t length);
+void RS485_Receive_Data(const char *name,u8 *buf, rt_size_t length);
 void rt_hw_RS485_init(void);
 void RS485Poll(void);
 
