@@ -2,6 +2,7 @@
 #define SPI_595_H
 
 #include <rtthread.h>
+#include <rtdef.h>
 #include <drivers/spi.h>
 
 struct spi_74hc595_74hc165

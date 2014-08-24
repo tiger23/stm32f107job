@@ -1,5 +1,5 @@
 /*
- * File      : rtdef.h
+ * File      : spi_595.c
  * This file is part of RT-Thread RTOS
  *
  * Change Logs:
@@ -11,6 +11,7 @@
 #include "spi_595.h"
 
 static struct spi_74hc595_74hc165  spi_m74hc595;
+static char spi_MOSI_buf[3];
 
 /* RT-Thread Device Driver Interface */
 static rt_err_t M74HC595_init(rt_device_t dev)
@@ -138,9 +139,12 @@ m74hc595_init("m74hc595", "SPI1");
 }
 void spi_m74hc595_Poll(void)
 {
-rt_size_t length=5;
-    static char rt_log_buf[5];
-rt_device_write(&spi_m74hc595.m74hc595_device, 0, rt_log_buf, length);
-//spi_m74hc595.m74hc595_device.write();
+    rt_size_t length = 3;
+    //static char spi_MOSI_buf[3];
+    rt_device_t spi_device;
+
+    spi_device = rt_device_find("SPI1");
+    rt_device_write(spi_device, 0, spi_MOSI_buf, length);
+    
 }
 

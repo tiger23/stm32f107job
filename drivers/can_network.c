@@ -229,8 +229,8 @@ void CAN_SetMsg(void)
     g_CanTxMessage.IDE = CAN_ID_STD;                //标准模式
     g_CanTxMessage.RTR = CAN_RTR_DATA;              //发送的是数据
     g_CanTxMessage.DLC = 2;                         //数据长度为2字节
-    g_CanTxMessage.Data[0] = 0xAB;
-    g_CanTxMessage.Data[1] = 0xCD;
+    //g_CanTxMessage.Data[0] = 0xAB;
+    //g_CanTxMessage.Data[1] = 0xCD;
 }
 
 /******************************************************************************/
@@ -284,6 +284,7 @@ void rt_hw_CAN_init(void)
 void CANPoll(void)
 {
     
+    CAN_Send_Msg(g_CanTxMessage.Data, 2);/*Max 8 */
 }
 
 /******************************************************************************/
@@ -300,6 +301,9 @@ void CANPoll(void)
   */
 void CAN1_RX0_IRQHandler(void)
 {
+/* enter interrupt */
+    rt_interrupt_enter();
+
     CAN_Receive(CAN1, CAN_FIFO0, &g_CanRxMessage);
 
     if ((g_CanRxMessage.StdId == 0x321) && (g_CanRxMessage.IDE == CAN_ID_STD) && (g_CanRxMessage.DLC == 1) && (g_CanRxMessage.Data[0] == 0xAA))
@@ -312,6 +316,9 @@ void CAN1_RX0_IRQHandler(void)
         /* Turn Off LED3 */
         //LED_Display(0x05); /* Error */
     }
+
+	    /* leave interrupt */
+    rt_interrupt_leave();
 }
 
 /**
@@ -322,6 +329,9 @@ void CAN1_RX0_IRQHandler(void)
 
 void CAN2_RX0_IRQHandler(void)
 {
+/* enter interrupt */
+    rt_interrupt_enter();
+
     CAN_Receive(CAN2, CAN_FIFO0, &g_CanRxMessage);
 
     if ((g_CanRxMessage.StdId == 0x321) && (g_CanRxMessage.IDE == CAN_ID_STD) && (g_CanRxMessage.DLC == 1) && (g_CanRxMessage.Data[0] == 0x55))
@@ -334,6 +344,9 @@ void CAN2_RX0_IRQHandler(void)
         /* Turn Off LED4 */
         //LED_Display(0x06); /* Error */
     }
+
+	/* leave interrupt */
+    rt_interrupt_leave();
 }
 
 /**************************END OF FILE************************************/
